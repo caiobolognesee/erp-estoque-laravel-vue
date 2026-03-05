@@ -2,6 +2,7 @@
 import { onMounted, ref, computed } from "vue";
 import { api } from "../lib/api";
 import type { Product, SalePayload, SaleResponse } from "../lib/types";
+import { formatBRL } from "../utils/currency";
 
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -126,7 +127,7 @@ onMounted(async () => {
 
           <v-col cols="12" md="6" class="d-flex justify-end align-center">
             <v-chip class="mr-3" label>
-              Total estimado: <strong class="ml-2">{{ estimatedTotal.toFixed(2) }}</strong>
+              Total estimado: <strong class="ml-2">{{ formatBRL(estimatedTotal) }}</strong>
             </v-chip>
 
             <v-btn variant="tonal" prepend-icon="mdi-plus" class="mr-2" @click="addRow">
@@ -196,9 +197,9 @@ onMounted(async () => {
       <v-row>
         <v-col cols="12" md="4">
           <v-list density="compact">
-            <v-list-item title="Sale ID" :subtitle="String(lastSale.id)" prepend-icon="mdi-identifier" />
-            <v-list-item title="Total" :subtitle="Number(lastSale.total).toFixed(2)" prepend-icon="mdi-cash" />
-            <v-list-item title="Profit" :subtitle="Number(lastSale.profit).toFixed(2)" prepend-icon="mdi-chart-line" />
+            <v-list-item title="ID da venda" :subtitle="String(lastSale.id)" prepend-icon="mdi-identifier" />
+            <v-list-item title="Total" :subtitle="formatBRL(lastSale.total)" prepend-icon="mdi-cash" />
+            <v-list-item title="Lucro" :subtitle="formatBRL(lastSale.profit)" prepend-icon="mdi-chart-line" />
           </v-list>
         </v-col>
 
@@ -216,8 +217,8 @@ onMounted(async () => {
               <tr v-for="(i, idx) in lastSale.items" :key="idx">
                 <td>{{ i.product_id }}</td>
                 <td class="text-right">{{ i.quantity }}</td>
-                <td class="text-right">{{ Number(i.unit_price).toFixed(2) }}</td>
-                <td class="text-right">{{ Number(i.cost_at_sale).toFixed(2) }}</td>
+                <td class="text-right">{{ formatBRL(i.unit_price) }}</td>
+                <td class="text-right">{{ formatBRL(i.cost_at_sale) }}</td>
               </tr>
             </tbody>
           </v-table>

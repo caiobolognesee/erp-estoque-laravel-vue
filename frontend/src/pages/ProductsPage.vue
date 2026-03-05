@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { api } from "../lib/api";
 import type { Product } from "../lib/types";
+import { formatBRL } from "../utils/currency";
 
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -102,8 +103,8 @@ onMounted(fetchProducts);
           <tr v-for="p in products" :key="p.id">
             <td>{{ p.id }}</td>
             <td>{{ p.name }}</td>
-            <td class="text-right">{{ Number(p.avg_cost).toFixed(2) }}</td>
-            <td class="text-right">{{ Number(p.sale_price).toFixed(2) }}</td>
+            <td class="text-right">{{ formatBRL(p.avg_cost) }}</td>
+            <td class="text-right">{{ formatBRL(p.sale_price) }}</td>
             <td class="text-right">{{ p.stock }}</td>
           </tr>
         </tbody>

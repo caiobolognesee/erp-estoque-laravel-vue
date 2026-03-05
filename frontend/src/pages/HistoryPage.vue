@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { api } from "../lib/api";
 import type { Purchase, SaleListItem } from "../lib/types";
+import { formatBRL } from "../utils/currency";
 
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -72,16 +73,16 @@ onMounted(load);
                 <v-table>
                   <thead>
                     <tr>
-                      <th class="text-left">ID do produto</th>
-                      <th class="text-right">Quantidade</th>
-                      <th class="text-right">Preço por unidade</th>
+                      <th class="text-center">ID do produto</th>
+                      <th class="text-center">Quantidade</th>
+                      <th class="text-center">Preço por unidade</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(i, idx) in p.items" :key="idx">
-                      <td>{{ i.product_id }}</td>
-                      <td class="text-right">{{ i.quantity }}</td>
-                      <td class="text-right">{{ Number(i.unit_price).toFixed(2) }}</td>
+                      <td class="text-center">{{ i.product_id }}</td>
+                      <td class="text-center">{{ i.quantity }}</td>
+                      <td class="text-center">{{ formatBRL(i.unit_price) }}</td>
                     </tr>
                   </tbody>
                 </v-table>
@@ -105,8 +106,8 @@ onMounted(load);
                 <div class="d-flex align-center justify-space-between w-100">
                   <div>
                     <strong>#{{ s.id }}</strong> — {{ s.customer }}
-                    <v-chip class="ml-2" size="small" label>Total: {{ Number(s.total).toFixed(2) }}</v-chip>
-                    <v-chip class="ml-2" size="small" label>Lucro: {{ Number(s.profit).toFixed(2) }}</v-chip>
+                    <v-chip class="ml-2" size="small" label>Total: {{ formatBRL(s.total) }}</v-chip>
+                    <v-chip class="ml-2" size="small" label>Lucro: {{ formatBRL(s.profit) }}</v-chip>
                   </div>
                   <div class="text-body-2 text-medium-emphasis">
                     {{ new Date(s.created_at).toLocaleString() }}
@@ -118,18 +119,18 @@ onMounted(load);
                 <v-table>
                   <thead>
                     <tr>
-                      <th class="text-left">ID do produto</th>
-                      <th class="text-right">Quantidade</th>
-                      <th class="text-right">Preço por unidade</th>
-                      <th class="text-right">Custo da venda</th>
+                      <th class="text-center">ID do produto</th>
+                      <th class="text-center">Quantidade</th>
+                      <th class="text-center">Preço por unidade</th>
+                      <th class="text-center">Custo da venda</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(i, idx) in s.items" :key="idx">
-                      <td>{{ i.product_id }}</td>
-                      <td class="text-right">{{ i.quantity }}</td>
-                      <td class="text-right">{{ Number(i.unit_price).toFixed(2) }}</td>
-                      <td class="text-right">{{ Number(i.cost_at_sale).toFixed(2) }}</td>
+                      <td class="text-center">{{ i.product_id }}</td>
+                      <td class="text-center">{{ i.quantity }}</td>
+                      <td class="text-center">{{ formatBRL(i.unit_price) }}</td>
+                      <td class="text-center">{{ formatBRL(i.cost_at_sale) }}</td>
                     </tr>
                   </tbody>
                 </v-table>
