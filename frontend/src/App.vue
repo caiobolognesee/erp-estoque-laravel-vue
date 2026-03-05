@@ -1,30 +1,32 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+const links = [
+  { title: "Produtos", to: "/products", icon: "mdi-package-variant" },
+  { title: "Compras", to: "/purchases", icon: "mdi-truck-fast" },
+  { title: "Vendas", to: "/sales", icon: "mdi-cash-register" },
+  { title: "Historico", to: "/history", icon: "mdi-history" },
+];
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
-</template>
+  <v-app>
+    <v-app-bar title="Stock ERP" density="comfortable" />
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+    <v-navigation-drawer permanent width="260">
+      <v-list nav>
+        <v-list-item
+          v-for="l in links"
+          :key="l.to"
+          :to="l.to"
+          :prepend-icon="l.icon"
+          :title="l.title"
+        />
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-main>
+      <v-container class="py-6">
+        <RouterView />
+      </v-container>
+    </v-main>
+  </v-app>
+</template>
