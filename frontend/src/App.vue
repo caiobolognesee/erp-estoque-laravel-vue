@@ -9,7 +9,7 @@ const links = [
 
 <template>
   <v-app>
-    <v-app-bar title="Stock ERP" density="comfortable" />
+    <v-app-bar title="ESTOQUE ERP" density="comfortable" />
 
     <v-navigation-drawer permanent width="260">
       <v-list nav>
