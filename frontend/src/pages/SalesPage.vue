@@ -95,7 +95,7 @@ onMounted(async () => {
   <div class="d-flex align-center justify-space-between mb-4">
     <div>
       <h2 class="text-h5 mb-1">Vendas</h2>
-      <div class="text-body-2 text-medium-emphasis">Registre sales, validate stock, and calculate profit</div>
+      <div class="text-body-2 text-medium-emphasis">Registre as vendas, valide o estoque e calcule o lucro</div>
     </div>
 
     <v-btn :loading="loading" prepend-icon="mdi-refresh" variant="tonal" @click="loadProducts">
