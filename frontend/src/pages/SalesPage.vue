@@ -191,18 +191,18 @@ onMounted(async () => {
           <v-table>
             <thead>
               <tr>
-                <th class="text-left">ID do produto</th>
-                <th class="text-right">Quantidade</th>
-                <th class="text-right">Preço por unidade</th>
-                <th class="text-right">Custo da venda</th>
+                <th class="text-center">ID do produto</th>
+                <th class="text-center">Quantidade</th>
+                <th class="text-center">Valor por unidade vendida</th>
+                <th class="text-center">Preço de custo</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(i, idx) in lastSale.items" :key="idx">
-                <td>{{ i.product_id }}</td>
-                <td class="text-right">{{ i.quantity }}</td>
-                <td class="text-right">{{ formatBRL(i.unit_price) }}</td>
-                <td class="text-right">{{ formatBRL(i.cost_at_sale) }}</td>
+                <td class="text-center">{{ i.product_id }}</td>
+                <td class="text-center">{{ i.quantity }}</td>
+                <td class="text-center">{{ formatBRL(i.unit_price) }}</td>
+                <td class="text-center">{{ formatBRL(i.cost_at_sale) }}</td>
               </tr>
             </tbody>
           </v-table>

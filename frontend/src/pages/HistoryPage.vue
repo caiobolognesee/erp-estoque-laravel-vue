@@ -55,7 +55,7 @@ onMounted(() => {
                     <tr>
                       <th class="text-center">ID do produto</th>
                       <th class="text-center">Quantidade</th>
-                      <th class="text-center">Preço por unidade</th>
+                      <th class="text-center">Custo por unidade</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -101,8 +101,8 @@ onMounted(() => {
                     <tr>
                       <th class="text-center">ID do produto</th>
                       <th class="text-center">Quantidade</th>
-                      <th class="text-center">Preço por unidade</th>
-                      <th class="text-center">Custo da venda</th>
+                      <th class="text-center">Valor por unidade vendida</th>
+                      <th class="text-center">Preço de custo</th>
                     </tr>
                   </thead>
                   <tbody>
