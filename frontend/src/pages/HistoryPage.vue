@@ -1,35 +1,15 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { api } from "../lib/api";
-import type { Purchase, SaleListItem } from "../lib/types";
+import { onMounted } from "vue";
+import { storeToRefs } from "pinia";
 import { formatBRL } from "../utils/currency";
+import { useHistoryStore } from "../stores/history";
 
-const loading = ref(false);
-const error = ref<string | null>(null);
+const historyStore = useHistoryStore();
+const { purchases, sales, loading, error } = storeToRefs(historyStore);
 
-const purchases = ref<Purchase[]>([]);
-const sales = ref<SaleListItem[]>([]);
-
-async function load() {
-  loading.value = true;
-  error.value = null;
-
-  try {
-    const [p, s] = await Promise.all([
-      api.get<Purchase[]>("/purchases"),
-      api.get<SaleListItem[]>("/sales"),
-    ]);
-
-    purchases.value = p.data;
-    sales.value = s.data;
-  } catch (e: any) {
-    error.value = e?.response?.data?.message ?? e?.message ?? "Falha ao buscar historico";
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(load);
+onMounted(() => {
+  historyStore.loadHistory();
+});
 </script>
 
 <template>
@@ -39,7 +19,7 @@ onMounted(load);
       <div class="text-body-2 text-medium-emphasis">Veja o historico de vendas e compras</div>
     </div>
 
-    <v-btn :loading="loading" prepend-icon="mdi-refresh" variant="tonal" @click="load">
+    <v-btn :loading="loading" prepend-icon="mdi-refresh" variant="tonal" @click="historyStore.loadHistory">
       Recarregar
     </v-btn>
   </div>
@@ -54,7 +34,7 @@ onMounted(load);
         <v-card-title>Compras</v-card-title>
         <v-card-text>
           <div v-if="loading">Carregando...</div>
-          <div v-else-if="purchases.length === 0" class="text-medium-emphasis"> Sem compras ainda.</div>
+          <div v-else-if="purchases.length === 0" class="text-medium-emphasis">Sem compras ainda.</div>
 
           <v-expansion-panels v-else variant="accordion">
             <v-expansion-panel v-for="p in purchases" :key="p.id">

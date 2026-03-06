@@ -1,25 +1,21 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
-import { api } from "../lib/api";
-import type { Product, SalePayload, SaleResponse } from "../lib/types";
+import { storeToRefs } from "pinia";
+import type { SalePayload } from "../lib/types";
 import { formatBRL } from "../utils/currency";
+import { useProductsStore } from "../stores/products";
+import { useSalesStore } from "../stores/sales";
 
-const loading = ref(false);
-const error = ref<string | null>(null);
-const success = ref<string | null>(null);
+const productsStore = useProductsStore();
+const salesStore = useSalesStore();
 
-const products = ref<Product[]>([]);
-const lastSale = ref<SaleResponse | null>(null);
+const { items: products } = storeToRefs(productsStore);
+const { loading, error, success, lastSale } = storeToRefs(salesStore);
 
 const customer = ref("");
 const items = ref<Array<{ product_id: number | null; quantity: number; unit_price: number }>>([
   { product_id: null, quantity: 1, unit_price: 0 },
 ]);
-
-async function loadProducts() {
-  const { data } = await api.get<Product[]>("/products");
-  products.value = data;
-}
 
 const productOptions = computed(() =>
   products.value.map((p) => ({
@@ -44,6 +40,7 @@ const estimatedTotal = computed(() =>
 const canSubmit = computed(() => {
   if (!customer.value.trim()) return false;
   if (items.value.length === 0) return false;
+
   return items.value.every(
     (i) =>
       i.product_id !== null &&
@@ -53,12 +50,7 @@ const canSubmit = computed(() => {
   );
 });
 
-async function submitSale() {
-  loading.value = true;
-  error.value = null;
-  success.value = null;
-  lastSale.value = null;
-
+async function handleSubmitSale() {
   const payload: SalePayload = {
     customer: customer.value.trim(),
     items: items.value.map((i) => ({
@@ -69,25 +61,17 @@ async function submitSale() {
   };
 
   try {
-    const { data } = await api.post<SaleResponse>("/sales", payload);
-    lastSale.value = data;
-    success.value = "Venda registrada com sucesso.";
+    await salesStore.submitSale(payload);
+
     customer.value = "";
     items.value = [{ product_id: null, quantity: 1, unit_price: 0 }];
-    await loadProducts();
-  } catch (e: any) {
-    error.value =
-      e?.response?.data?.message ??
-      JSON.stringify(e?.response?.data?.errors ?? null) ??
-      e?.message ??
-      "Falha ao registrar venda.";
-  } finally {
-    loading.value = false;
+  } catch {
+    // error already handled in store
   }
 }
 
 onMounted(async () => {
-  await loadProducts();
+  await productsStore.fetchProducts();
 });
 </script>
 
@@ -98,7 +82,7 @@ onMounted(async () => {
       <div class="text-body-2 text-medium-emphasis">Registre as vendas, valide o estoque e calcule o lucro</div>
     </div>
 
-    <v-btn :loading="loading" prepend-icon="mdi-refresh" variant="tonal" @click="loadProducts">
+    <v-btn :loading="loading" prepend-icon="mdi-refresh" variant="tonal" @click="productsStore.fetchProducts">
       Recarregar produtos
     </v-btn>
   </div>
@@ -114,7 +98,7 @@ onMounted(async () => {
   <v-card class="mb-6">
     <v-card-title>Nova venda</v-card-title>
     <v-card-text>
-      <v-form @submit.prevent="submitSale">
+      <v-form @submit.prevent="handleSubmitSale">
         <v-row>
           <v-col cols="12" md="6">
             <v-text-field
